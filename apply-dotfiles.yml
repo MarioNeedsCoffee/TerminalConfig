@@ -1,0 +1,43 @@
+---
+- name: Apply dotfiles (bash, zsh, tmux, nvim)
+  hosts: all
+  gather_facts: false
+
+  vars:
+    dotfiles_dir: "{{ playbook_dir }}"
+    home_dir: "{{ ansible_env.HOME }}"
+
+  tasks:
+    - name: Ensure Neovim config directory exists
+      ansible.builtin.file:
+        path: "{{ home_dir }}/.config/nvim"
+        state: directory
+        mode: "0755"
+
+    - name: Install ~/.bashrc
+      ansible.builtin.copy:
+        src: "{{ dotfiles_dir }}/.bashrc"
+        dest: "{{ home_dir }}/.bashrc"
+        mode: "0644"
+        backup: true
+
+    - name: Install ~/.zshrc
+      ansible.builtin.copy:
+        src: "{{ dotfiles_dir }}/zsh/.zshrc"
+        dest: "{{ home_dir }}/.zshrc"
+        mode: "0644"
+        backup: true
+
+    - name: Install ~/.tmux.conf
+      ansible.builtin.copy:
+        src: "{{ dotfiles_dir }}/tmux/.tmux.conf"
+        dest: "{{ home_dir }}/.tmux.conf"
+        mode: "0644"
+        backup: true
+
+    - name: Install ~/.config/nvim/init.lua
+      ansible.builtin.copy:
+        src: "{{ dotfiles_dir }}/nvim/init.lua"
+        dest: "{{ home_dir }}/.config/nvim/init.lua"
+        mode: "0644"
+        backup: true
