@@ -1,3 +1,4 @@
+cat > ~/.config/nvim/lua/config/keymaps.lua << 'EOF'
 vim.opt.textwidth = 0
 vim.opt.wrapmargin = 0
 vim.opt.formatoptions = ''
@@ -18,3 +19,4 @@ vim.keymap.set('x', '<C-c>', '"+y', { noremap = true, silent = true, desc = 'Cop
 vim.keymap.set('x', '<C-v>', '"_d"+p', { noremap = true, silent = true, desc = 'Paste over selection' })
 vim.keymap.set('n', '<C-v>', '"+p', { noremap = true, silent = true, desc = 'Paste from system clipboard' })
 vim.keymap.set('i', '<C-v>', '<C-r>+', { noremap = true, silent = true, desc = 'Paste in insert mode' })
+EOF

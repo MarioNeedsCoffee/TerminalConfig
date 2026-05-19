@@ -1,0 +1,71 @@
+-- Telescope
+vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'Fuzzy find files' })
+vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { desc = 'Fuzzy find grep' })
+vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<cr>', { desc = 'Fuzzy find buffers' })
+
+-- Exit insert mode
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode' })
+
+-- System clipboard
+vim.opt.clipboard = "unnamedplus"
+
+-- Ctrl+C in visual mode
+vim.keymap.set("v", "<C-c>", function()
+  local mode = vim.fn.mode()
+  local _, ls, cs = unpack(vim.fn.getpos('v'))
+  local _, le, ce = unpack(vim.fn.getpos('.'))
+  if ls > le or (ls == le and cs > ce) then
+    ls, le = le, ls
+    cs, ce = ce, cs
+  end
+  local lines = vim.fn.getline(ls, le)
+  local text
+  if mode == 'V' then
+    text = table.concat(lines, "\n")
+  else
+    if #lines == 1 then
+      lines[1] = string.sub(lines[1], cs, ce)
+    else
+      lines[1] = string.sub(lines[1], cs)
+      lines[#lines] = string.sub(lines[#lines], 1, ce)
+    end
+    text = table.concat(lines, "\n")
+  end
+  vim.fn.setreg('+', text)
+  vim.fn.setreg('*', text)
+end, { noremap = true, silent = true })
+
+-- Ctrl+V to paste
+vim.keymap.set("n", "<C-v>", function()
+  local text = vim.fn.getreg('+')
+  vim.api.nvim_put({text}, 'c', true, true)
+end, { noremap = true, silent = true })
+
+vim.keymap.set("i", "<C-v>", function()
+  local text = vim.fn.getreg('+')
+  vim.api.nvim_put({text}, 'c', true, true)
+end, { noremap = true, silent = true })
+
+-- Delete to black hole (so d/x don't clobber clipboard)
+vim.keymap.set({ "n", "v" }, "d", '"_d', { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "D", '"_D', { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "x", '"_x', { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "c", '"_c', { noremap = true, silent = true })like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,like the idea is that the judging criteria basically is 1. if the clipboard has 2 elements is very very bad 2. if ctrl C didn't trigger the deletion of every clipboard text, then it's very very bad,
+vim.keymap.set({ "n", "v" }, "C", '"_C', { noremap = true, silent = true })his palms are sweaty
+his palms are sweaty
+his palms are sweaty
+his palms are sweaty
+his palms are sweaty
+
+gordon Ryan
+gordon Ryan
+gordon Ryan
+gordon Ryan
+gordon Ryan
+gordon Ryan
+gordon Ryan
+gordon Ryan
+
+
+
+

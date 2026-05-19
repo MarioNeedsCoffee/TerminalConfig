@@ -1,0 +1,32 @@
+
+7:14 PM
+Nothing. The keymaps file is correct as it is. The logic you described is already implemented in it.
+
+Paste the current keymaps.lua content here so I can confirm it's the latest version.
+
+➜  config git:(main) ✗ cat keymaps.lua
+-- Telescope
+vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'Fuzzy find files' })
+vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { desc = 'Fuzzy find grep' })
+vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<cr>', { desc = 'Fuzzy find buffers' })
+-- Exit insert mode
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode' })
+-- System clipboard
+vim.opt.clipboard = "unnamedplus"
+-- Ctrl+C / Ctrl+V
+vim.keymap.set('v', '<C-c>', '<cmd>let @+ = ""<CR>"+y',
+  { noremap = true, silent = true, desc = 'Clear clipboard then copy' })
+vim.keymap.set('x', '<C-c>', '<cmd>let @+ = ""<CR>"+y',
+  { noremap = true, silent = true, desc = 'Clear clipboard then copy' })
+vim.keymap.set('v', '<C-v>', '"_d"+p',
+  { noremap = true, silent = true, desc = 'Paste over selection (no clipboard overwrite)' })
+vim.keymap.set('n', '<C-v>', '"+p', { noremap = true, silent = true, desc = 'Paste from system clipboard' })
+vim.keymap.set('i', '<C-v>', '<C-r>+',
+  { noremap = true, silent = true, desc = 'Paste from system clipboard in insert mode' })
+
+Show more
+7:14 PM
+Missing the x mode for Ctrl+V. That's the visual line paste. Final version:
+
+lua
+-- Telescope
