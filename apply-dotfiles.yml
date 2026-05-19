@@ -1,12 +1,10 @@
 ---
-- name: Apply dotfiles (bash, zsh, tmux, nvim)
+- name: Apply dotfiles (bash, zsh, tmux, nvim, kitty) and install TUI tools
   hosts: all
   gather_facts: false
-
   vars:
     dotfiles_dir: "{{ playbook_dir }}"
     home_dir: "{{ ansible_env.HOME }}"
-
   tasks:
     - name: Ensure Neovim config directory exists
       ansible.builtin.file:
@@ -41,3 +39,99 @@
         dest: "{{ home_dir }}/.config/nvim/init.lua"
         mode: "0644"
         backup: true
+
+    - name: Remove existing kitty config
+      ansible.builtin.file:
+        path: "{{ home_dir }}/.config/kitty"
+        state: absent
+
+    - name: Symlink kitty config folder to dotfiles
+      ansible.builtin.file:
+        src: "{{ dotfiles_dir }}/kitty"
+        dest: "{{ home_dir }}/.config/kitty"
+        state: link
+
+    - name: Set kitty as default terminal (update-alternatives)
+      ansible.builtin.command:
+        cmd: update-alternatives --set x-terminal-emulator /usr/bin/kitty
+      become: true
+      ignore_errors: true
+
+    - name: Set kitty as default terminal (gsettings)
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.desktop.default-applications.terminal exec 'kitty'
+      environment:
+        DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_env.UID }}/bus"
+
+    - name: Install apt-based TUI tools
+      ansible.builtin.apt:
+        name:
+          - btop
+          - lnav
+          - pgcli
+          - mycli
+          - httpie
+          - ranger
+        state: present
+        update_cache: true
+      become: true
+
+    - name: Install lazygit
+      ansible.builtin.shell: |
+        LAZYGIT_VERSION=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d 'v')
+        curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+        tar -xf /tmp/lazygit.tar.gz -C /tmp
+        install /tmp/lazygit /usr/local/bin/lazygit
+      become: true
+      args:
+        creates: /usr/local/bin/lazygit
+
+    - name: Install lazydocker
+      ansible.builtin.shell: |
+        LAZYDOCKER_VERSION=$(curl -s https://api.github.com/repos/jesseduffield/lazydocker/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d 'v')
+        curl -Lo /tmp/lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
+        tar -xf /tmp/lazydocker.tar.gz -C /tmp
+        install /tmp/lazydocker /usr/local/bin/lazydocker
+      become: true
+      args:
+        creates: /usr/local/bin/lazydocker
+
+    - name: Install k9s
+      ansible.builtin.shell: |
+        K9S_VERSION=$(curl -s https://api.github.com/repos/derailed/k9s/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d 'v')
+        curl -Lo /tmp/k9s.tar.gz "https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_amd64.tar.gz"
+        tar -xf /tmp/k9s.tar.gz -C /tmp
+        install /tmp/k9s /usr/local/bin/k9s
+      become: true
+      args:
+        creates: /usr/local/bin/k9s
+
+    - name: Install yazi
+      ansible.builtin.shell: |
+        YAZI_VERSION=$(curl -s https://api.github.com/repos/sxyazi/yazi/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d 'v')
+        curl -Lo /tmp/yazi.zip "https://github.com/sxyazi/yazi/releases/download/v${YAZI_VERSION}/yazi-x86_64-unknown-linux-gnu.zip"
+        unzip -o /tmp/yazi.zip -d /tmp/yazi
+        install /tmp/yazi/yazi-x86_64-unknown-linux-gnu/yazi /usr/local/bin/yazi
+      become: true
+      args:
+        creates: /usr/local/bin/yazi
+
+    - name: Install usql
+      ansible.builtin.shell: |
+        USQL_VERSION=$(curl -s https://api.github.com/repos/xo/usql/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d 'v')
+        curl -Lo /tmp/usql.tar.bz2 "https://github.com/xo/usql/releases/download/v${USQL_VERSION}/usql_static-${USQL_VERSION}-linux-amd64.tar.bz2"
+        tar -xf /tmp/usql.tar.bz2 -C /tmp
+        install /tmp/usql_static /usr/local/bin/usql
+      become: true
+      args:
+        creates: /usr/local/bin/usql
+
+    - name: Install curlie
+      ansible.builtin.shell: |
+        CURLIE_VERSION=$(curl -s https://api.github.com/repos/rs/curlie/releases/latest | grep tag_name | cut -d '"' -f4 | tr -d 'v')
+        curl -Lo /tmp/curlie.tar.gz "https://github.com/rs/curlie/releases/download/v${CURLIE_VERSION}/curlie_${CURLIE_VERSION}_linux_amd64.tar.gz"
+        tar -xf /tmp/curlie.tar.gz -C /tmp/curlie_extract
+        install /tmp/curlie_extract/curlie /usr/local/bin/curlie
+      become: true
+      args:
+        creates: /usr/local/bin/curlie
